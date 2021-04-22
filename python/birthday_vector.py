@@ -23,6 +23,6 @@ y_axis = cylinder(color=color.green, pos=vector(0, 0, 0), axis=vector(0, 10, 0),
 y_lbl = label(pos=vector(0, 11, 0), text="Y", color=color.green, opacity=0, height=30, box=0)
 z_axis = cylinder(color=color.blue, pos=vector(0, 0, 0), axis=vector(0, 0, 10), radius=0.3)
 z_lbl = label(pos=vector(0, 0, 11), text="Z", color=color.blue, opacity=0, height=30, box=0)
-
-r = arrow(pos=vector(0, 0, 0), axis=vector(6, 25, 0), color=color.yellow, shaftwidth=0.5)
-r_lbl = label(pos=vector(6, 25, 0), text="06-25", color=color.black, shaftwidth=0.5)
+#  micheal birth month november(11) my birth month was june(06)
+r = arrow(pos=vector(0, 0, 0), axis=vector(6, , 0), color=color.yellow, shaftwidth=0.5)
+r_lbl = label(pos=vector(6, 25, 0), text="06x̂ + 25ŷ + 00ẑ", color=color.black, shaftwidth=0.5)
