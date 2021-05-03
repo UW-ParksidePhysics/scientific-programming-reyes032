@@ -1,57 +1,64 @@
+%simulation of a rc circuit with three different values of capacitors
+% three different values of resistors
+% three different values of capacitors
 
 
 
+data = readcell('capandrestable.csv');
 
+res_values = data(2,2:end);
+cap_values = data(1,2:end);
 
+number_of_resistors = length(res_values);
+number_of_capacitors = length(cap_values);
 
-
-%input values
-voltage = 120;
-
-capacitance_in_mufarads =132.6e-6;
-
-resistance_in_ohms = 4;
-
-frequency_in_hz = 60;
-
-%ohms law fromula
-%voltage = current * resistance_in_ohms;
-resistance_in_ohms = voltage/current;
-current = voltage/resistance_in_ohms;
-power = voltage*current;
-% rms 
-v_rms = voltage / sqrt(2);
-
-%Circuit totals
-total_impedence = (resistor_in_ohms*capacitive_reactance)/sqrt(resistance_in_ohms^2 + capacitive_reactance^2);
-total_current = sqrt(current_across_resistor^2 + current_across_capacitor);
-%formulas capacitor
-capacitive_reactance = 1/ (2*pi*frequency_in_hz*capacitance_in_mufarads);
-current_across_capacitor = voltage/capacitive_reactance;
-voltage_across_capacitor = voltage;
 
 %formulas across resistor
-resistance = resisance_in_ohms;
-current_across_resistor = voltage/resistance;
+%resistance = resisance_in_ohms;
+%current_across_resistor = peak_voltage/resistance;
 
 %Charging of a capacitor
 %
-voltage = 120;
-frequency_in_hz = 60;
-capacitance_in_mufarads =132.6e-6;
-resistance_in_ohms = 4;
-T = 2 * pi /omega;
-t = 
+peak_voltage = 120;
+frequency = 60;
+omega = 2.*pi* frequency;                                                                 
+ac_periods = 10/frequency;
+times = linspace(0,ac_periods,1000);
+source_voltage = peak_voltage .* sin(omega.*times);
 
-tau = resistance_in_ohms * capacitance_in_mufarads;
-omega = 2.* pi.* frequency_in_hz;
-y = voltage/tau.*(sin(omega.*t));
-plot(t, y, 'b-')
-title('capacitor charging anlaysis')
-xlabel('time (s)')
-ylabel('Voltage across capacitor (v)')
+for c = 1:number_of_capacitors
+  for r = 1:number_of_resistors
+    cap = cap_values{c};
+    res = res_values{r};
+    tau = res*cap;
+    solution = solve_solution(peak_voltage,omega,tau);
+   
+    
+    capacitor_voltage = solution(times);
+    resistor_voltage = source_voltage - capacitor_voltage;
 
 
-function voltage = calculate_resistor_voltage(current, resistance)
-    voltage = current * resistance;
+    hold on
+    
+    plot(times, capacitor_voltage)
+    plot(times, resistor_voltage)
+    ylim([-1*peak_voltage,1*peak_voltage])
+  end    
+end
+plot(times, source_voltage)
+hold off
+
+
+
+%function peak_voltage = calculate_resistor_voltage(current, res_values)
+    %peak_voltage = current * res_values;
+%end
+
+function solution = solve_solution(peak_voltage,omega,tau)
+    syms capacitor_voltage(t);
+    eqn = diff(capacitor_voltage,t) == (-capacitor_voltage + peak_voltage * sin(omega*t))/tau;
+    cond = capacitor_voltage(0)  ==  0;
+    solution(t) = dsolve(eqn,cond);
 end    
+
+
