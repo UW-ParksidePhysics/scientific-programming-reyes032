@@ -18,11 +18,8 @@ while time < stop_time:
     y = initial_position.y + initial_velocity.y * time
     z = initial_position.z + initial_velocity.z * time
     ball.pos = vp.vector(x, y, z)
-    time += time_step
-while time < stop_time:
-    vp.rate(rate_of_animation)
-    x = initial_position.x + initial_velocity.x * time
-    y = initial_position.y + initial_velocity.y * time
-    z = initial_position.z + initial_velocity.z * time
+    x = initial_position_2.x + initial_velocity_2.x * time
+    y = initial_position_2.y + initial_velocity_2.y * time
+    z = initial_position_2.z + initial_velocity_2.z * time
     ball.pos = vp.vector(x, y, z)
     time += time_step

@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sp
-from scipy.integrate import odeint
+from scipy.integrate import solve_ivp
 
 
 def import_data(filename):
@@ -11,7 +11,6 @@ def import_data(filename):
     output = {'capacitor_values': [], 'resistor_values': []}
     for line in content:
         element = line.split(",")
-        # print(element)
         output['capacitor_values'].append(float(element[0]))
         output['resistor_values'].append(float(element[1]))
     return output
@@ -23,23 +22,27 @@ def parameter_setup():
     omega = 2. * np.pi * frequency
     ac_periods = 10 / frequency
     times = np.linspace(0, ac_periods, 1000)
-    return peak_voltage, omega, times
+    intial_voltage = 0
+    return peak_voltage, omega, times, intial_voltage
 
 
-# def source_voltage(peak_voltage , np.sin(omega*times)
+def source_voltage(peak_voltage, time, omega):
+    return peak_voltage * np.sin(omega * time)
 
-def capacitor_voltage(solve_solution, times):
-    return solve_solution * times
+
+def capacitor_voltage_derivative(time, capacitor_voltage, peak_voltage, omega, tau):
+    return (source_voltage(peak_voltage, time, omega) - capacitor_voltage(time)) / tau
 
 
 def resistor_voltage(source_voltage, capacitor_voltage):
     return source_voltage - capacitor_voltage
 
 
-# def solve_solution(peak_voltage,omega,tau):
-# y0 = capacitor_voltage(0) = 0
-# y = odeint(solve_solution(),y0.times)
-# return (-capacitor_voltage + peak_voltage * np.sin(omega*t))/tau
+def solve_solution(peak_voltage, omega, tau, initial_voltage, times):
+    solution = solve_ivp(capacitor_voltage_derivative, (times[0], times[-1]), initial_voltage,
+                         t_eval=times, args=(peak_voltage, omega, tau))
+    return solution.y
+
 
 
 def plot_solution(times, source_voltage, resistor_voltage, peak_voltage, capacitor_voltage):
@@ -52,6 +55,7 @@ def plot_solution(times, source_voltage, resistor_voltage, peak_voltage, capacit
 
 
 if __name__ == '__main__':
+    peak_voltage, omega, times, initial_voltage = parameter_setup()
     import_values = import_data('../matlab/capandrestable.csv')
     for resistance, capacitance in zip(import_values['resistor_values'], import_values['capacitor_values']):
-     print(resistance,capacitance)
+        solve_solution(peak_voltage, omega, resistance * capacitance)
