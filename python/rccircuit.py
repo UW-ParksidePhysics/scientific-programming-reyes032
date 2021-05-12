@@ -46,7 +46,7 @@ def solve_solution(peak_voltage, omega, tau, initial_voltage, times):
 
 
 def plot_solution(times, source_voltage, resistor_voltage, peak_voltage, capacitor_voltage):
-    # plt.plot(times, source_voltage)
+    plt.plot(times, source_voltage)
     plt.plot(times, capacitor_voltage)
     plt.plot(times, resistor_voltage)
     plt.xlabel('time')
@@ -58,4 +58,4 @@ if __name__ == '__main__':
     peak_voltage, omega, times, initial_voltage = parameter_setup()
     import_values = import_data('../matlab/capandrestable.csv')
     for resistance, capacitance in zip(import_values['resistor_values'], import_values['capacitor_values']):
-        solve_solution(peak_voltage, omega, resistance * capacitance)
+        solve_solution(peak_voltage, omega, times, initial_voltage, resistance * capacitance)
