@@ -6,6 +6,9 @@ from quadratic_fit import quadratic_fit
 import matplotlib.pyplot as plt
 from plot_data_with_fit import plot_data_with_fit
 
+volumes = array[0]
+energies = array[1]
+
 def parse_file_name(file_name):
     names = file_name.split(".")
     chemical_symbol = names[0]
@@ -23,7 +26,7 @@ print(stats)
 quadratic_coefficients = quadratic_fit(array)
 
 fit_eos_array = fit_eos(array[0], array[1], quadratic_coefficients, eos="vinet", number_of_points=50)
-print(fit_eos_array)
+print(fit_eos_array, eos_)
 
 
 
@@ -31,10 +34,10 @@ plt.scatter(array[0], array[1], 'bo')
 plt.plot(fit_eos_array, 'k')
 plt.xlabel(r'$\mathit{V}(\AA^3$/atom)')
 plt.ylabel(r'$\mathit{E}$ (eV/atom)')
-plt.xlim([101.746523, 142.2979448])
-plt.ylim([-316.060057,-258.5834622])
+
+
 plt.show()
 
 
-def annotate_graph():
+
 
