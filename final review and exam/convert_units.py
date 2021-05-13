@@ -1,7 +1,7 @@
 import scipy.constants as cnst
 
 
-def convert_units(volumes, energies)
+def convert_units()
 
 
 
